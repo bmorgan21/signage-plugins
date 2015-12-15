@@ -1,0 +1,76 @@
+<style type="text/css">
+    #content table th {
+      text-align:center;
+    }
+    #content .ticket {
+      padding:5px;
+      margin-bottom:5px;
+    }
+
+    #content .ticket.priority-5 {
+      color:#99666A;
+      border-color:#FCD2D9;
+      border-bottom-color:#F3C3C3;
+      background-color:#FDE2E6;
+    }
+    #content .ticket.priority-4 {
+      color:#99666A;
+      border-color:#FCD2D9;
+      border-bottom-color:#F3C3C3;
+      background-color:#FDE2E6;
+    }
+
+    #content .ticket.priority-3 {
+      color: #555553;
+      border-color: #F1EBC2;
+      border-bottom-color: #E0DCB2;
+      background-color: #fef8d0;
+    }
+
+    #content .ticket.priority-2 {
+      color: #297188;
+      border-color: #C8EBF7;
+      border-bottom-color: #C4E6F1;
+      background-color: #DAF6FF;
+    }
+    #content .ticket.priority-1 {
+      color: #297188;
+      border-color: #C8EBF7;
+      border-bottom-color: #C4E6F1;
+      background-color: #DAF6FF;
+    }
+
+    #content .ticket .assignee {
+      font-size: 11px;
+      float:right;
+      line-height:20px;
+      margin-left:5px;
+    }
+</style>
+
+<center>
+    <h2>{{ milestone['title'] }}</h2>
+</center>
+
+<table class="table" width="100%" cellpadding="0">
+    <thead>
+        <tr width="20%">
+        {% for status, tickets in data %}
+        <th>{{ status|title }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tr>
+        {% for status, tickets in data %}
+        <td width="20%">
+            {% for ticket in tickets %}
+            <div class="ticket priority-{{ ticket['priority'] }}">
+                #{{ ticket['number'] }} {{ ticket['summary'] }}
+                {% if ticket['assignee_id'] %}<div class="assignee muted"><i class="glyphicon glyphicon-user"></i> {{ people_map[ticket['assignee_id']] }}</div>{% endif %}
+                <div class="clearfix"></div>
+            </div>
+            {% endfor %}
+        </td>
+        {% endfor %}
+    </tr>
+</table>
