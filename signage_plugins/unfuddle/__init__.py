@@ -1,7 +1,7 @@
 import os
 import requests
 
-from plugins import Plugin
+from signage_plugins import Plugin
 
 
 class UnfuddlePlugin(Plugin):
