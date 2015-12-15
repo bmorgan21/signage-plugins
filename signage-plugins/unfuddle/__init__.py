@@ -5,7 +5,8 @@ from plugins import Plugin
 
 
 class UnfuddlePlugin(Plugin):
-    def __init__(self, username, password, project_id, statuses=['new', 'closed'], map_target=None, **kwargs):
+    def __init__(self, subdomain, username, password, project_id, statuses=['new', 'closed'], map_target=None, **kwargs):
+        self.subdomain = subdomain
         self.username = username
         self.password = password
         self.project_id = project_id
@@ -19,7 +20,7 @@ class UnfuddlePlugin(Plugin):
         self.session.headers.update({'Accept': 'application/json'})
 
         self.people_map = {}
-        people = self.session.get('https://hourlynerd.unfuddle.com/api/v1/people')
+        people = self.session.get('https://{subdomain}.unfuddle.com/api/v1/people'.format(subdomain=self.subdomain))
         for person in people.json():
             first_name_last_initial = person['first_name']
             if person['last_name']:
@@ -29,9 +30,9 @@ class UnfuddlePlugin(Plugin):
     def get_data(self):
         data = []
 
-        milestones = self.session.get('https://hourlynerd.unfuddle.com/api/v1/projects/{project_id}/milestones/upcoming'.format(project_id=self.project_id))
+        milestones = self.session.get('https://{subdomain}.unfuddle.com/api/v1/projects/{project_id}/milestones/upcoming'.format(subdomain=self.subdomain, project_id=self.project_id))
         for milestone in milestones.json():
-            tickets = self.session.get('https://hourlynerd.unfuddle.com//api/v1/projects/{project_id}/milestones/{milestone_id}/tickets'.format(project_id=self.project_id, milestone_id=milestone['id']))
+            tickets = self.session.get('https://{subdomain}.unfuddle.com//api/v1/projects/{project_id}/milestones/{milestone_id}/tickets'.format(subdomain=self.subdomain, project_id=self.project_id, milestone_id=milestone['id']))
 
             d = {}
             target = 'all.milestone-{}'.format(milestone['id'])
