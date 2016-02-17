@@ -5,13 +5,14 @@ from signage_plugins import Plugin
 
 
 class UnfuddlePlugin(Plugin):
-    def __init__(self, subdomain, username, password, project_id, statuses=['new', 'closed'], map_target=None, **kwargs):
+    def __init__(self, subdomain, username, password, project_id, statuses=['new', 'closed'], map_target=None, sort_tickets=None, **kwargs):
         self.subdomain = subdomain
         self.username = username
         self.password = password
         self.project_id = project_id
         self.statuses = statuses
         self.map_target = map_target
+        self.sort_tickets = sort_tickets
         Plugin.__init__(self, dirname=os.path.dirname(__file__), **kwargs)
 
     def init(self):
@@ -50,7 +51,10 @@ class UnfuddlePlugin(Plugin):
 
             result = []
             for status in self.statuses:
-                tickets = sorted(d[status], lambda x, y: cmp(y['priority'], x['priority']))
+                if self.sort_tickets:
+                    tickets = sorted(d[status], self.sort_tickets)
+                else:
+                    tickets = sorted(d[status], lambda x, y: cmp(y['priority'], x['priority']))
                 result.append((status, tickets))
 
             data.append({'milestone': milestone, 'people_map': self.people_map, 'data': result, 'target': target})
